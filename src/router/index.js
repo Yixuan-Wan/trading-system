@@ -1,22 +1,101 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import LogIn from '@/views/LogIn.vue'
+import SignUp from '@/views/SignUp.vue'
+import DashBoard from '@/views/trader/DashBoard.vue'
+import TraderHomepage from '@/views/trader/TraderHomepage.vue'
+import MarketDepth from '@/views/trader/MarketDepth.vue'
+import OrderBlotter from '@/views/trader/OrderBlotter.vue'
+import CreateOrder from '@/views/trader/CreateOrder.vue'
+import CreateStep1 from '@/views/trader/CreateStep1.vue'
+import CreateStep2 from '@/views/trader/CreateStep2.vue'
+import CreateStep3 from '@/views/trader/CreateStep3.vue'
+import BrokerHomePage from '@/views/broker/BrokerHomePage.vue'
+import PendingOrder from '@/views/broker/PendingOrder.vue'
+import BrokerTransaction from '@/views/broker/BrokerTransaction.vue'
+import MyOrder from '@/views/trader/MyOrder.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'login',
+    component: LogIn
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/signup',
+    name: 'signup',
+    component: SignUp
+  },
+  {
+    path: '/trader',
+    name: 'trader',
+    component: TraderHomepage,
+    redirect: '/trader/market',
+    children:[
+      {
+        path: 'dashboard',
+        name: 'dashboard-trader',
+        component: DashBoard,
+      },
+      {
+        path: 'market',
+        name: 'market-trader',
+        component: MarketDepth,
+      },
+      {
+        path: 'blotter',
+        name: 'blotter-trader',
+        component: OrderBlotter,
+      },
+      {
+        path: 'create',
+        name: 'create-trader',
+        component: CreateOrder,
+        redirect:"/trader/create/step1",
+        children:[
+          {
+            path:'step1',
+            name:'step1',
+            component: CreateStep1
+          },
+          {
+            path:'step2',
+            name:'step2',
+            component: CreateStep2
+          },
+          {
+            path:'step3',
+            name:'step3',
+            component: CreateStep3
+          },
+        ]
+      },
+      {
+        path:"order",
+        name:"order-trader",
+        component: MyOrder
+      }
+    ]
+  },{
+    path:'/broker',
+    name:'broker',
+    component: BrokerHomePage,
+    redirect:'/broker/market',
+    children:[{
+      path:'market',
+      name:'market-broker',
+      component: MarketDepth
+    },{
+      path:'pending-order',
+      name: 'pending-order',
+      component: PendingOrder
+    },{
+      path:'transaction',
+      name: 'transaction-broker',
+      component: BrokerTransaction
+    }]
   }
 ]
 

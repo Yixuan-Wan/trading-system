@@ -21,15 +21,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="Order Id" v-if="hasDelete">
-                <el-select v-model="deleteOrderId" placeholder="Select" >
-                  <el-option
-                    v-for="broker in brokers"
-                    :key="broker.brokerId"
-                    :label="broker.name"
-                    :value="broker.brokerId"
-                  ></el-option>
-               
-                </el-select>
+              <el-input v-model="deleteOrderId" placeholder="OrderId you want to deleted" style="width: 30%;"></el-input>
             </el-form-item>
             <el-form-item label="Product" v-if="hasProduct">
                 <el-select v-model="form.product" placeholder="Select">
@@ -97,6 +89,8 @@ export default {
         this.CreateMarketOrder()
       }else if(this.orderAlgo==1){
         this.CreateLimitOrder()
+      }else if(this.orderAlgo==3){
+        this.CreateCancelOrder()
       }
     },
     resetForm() {
@@ -139,6 +133,15 @@ export default {
       }
     },
     CreateMarketOrder(){
+      if (this.form.type=="" || this.form.product=="" || this.form.broker=="" || this.form.quantity=="") {
+        this.$message.error('Please fill in all required fields!');
+        return; 
+      }
+      if(!this.form.confirmation){
+        this.$message.error('Please confirm the order!');
+        return; 
+      }
+      
       const marketOrder = {
         orderType: this.form.type,
         productId: this.form.product,
@@ -158,6 +161,10 @@ export default {
       })
     },
     CreateLimitOrder(){
+      if (!this.form.type || !this.form.product || !this.form.broker || !this.form.quantity ||!this.form.price) {
+        this.$message.error('Please fill in all required fields!');
+        return; 
+      }
       const limitOrder = {
         orderType: this.form.type,
         productId: this.form.product,
@@ -178,6 +185,14 @@ export default {
       })
     },
     CreateCancelOrder(){
+      if (this.deleteOrderId=="" || this.form.broker=="" || this.form.quantity=="") {
+        this.$message.error('Please fill in all required fields!');
+        return; 
+      }
+      if(!this.form.confirmation){
+        this.$message.error('Please confirm the order!');
+        return; 
+      }
       const cancelOrder = {
         deleteOrderId: this.deleteOrderId,
         brokerId: this.form.broker,

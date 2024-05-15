@@ -2,18 +2,14 @@
 <div class="order-container">
     <div class="order-box">
         <div class="result-box">Result : {{res}} ({{ detail }})</div>
-        <div class="result-box">Related Transcations:</div>
+        <div class="result-box" v-show="!isCancel">Related Transcations:</div>
+        <div class="result-box" v-show="isCancel">Related Order:</div>
         <div class="table-box">
             <el-table
+                v-show="!isCancel"
                 :data="tableData"
                 height="300"
                 style="margin: auto; width: 96%; margin-top: 10px;">
-
-                <!-- <el-table-column
-                    prop="transactionId"
-                    label="transaction Id"
-                >
-                </el-table-column> -->
                 <el-table-column
                     prop="brokerName"
                     label="Broker"
@@ -77,15 +73,66 @@
                 </el-table-column>
                 
             </el-table>
+
+            <el-table
+                v-show="isCancel"
+                :data="orderData"
+                style="margin: auto; width: 96%; margin-top: 10px;"
+                >
+                <el-table-column
+                    prop="orderId"
+                    label="Order Id"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="brokerId"
+                    label="Broker Id"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="productId"
+                    label="Product Id"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="quantity"
+                    label="Qty"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="remainQuantity"
+                    label="Remain Qty"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="price"
+                    label="Price"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="createTime"
+                    label="Create Time"
+                    width="160">
+                </el-table-column>
+                <el-table-column
+                    prop="updateTime"
+                    label="Update Time"
+                    width="160">
+                </el-table-column>
+                
+                
+            </el-table>
         </div>
         <div class="button-box">
-            <el-button type="primary" >Confirm</el-button>
+            <el-button type="primary" @click="goBack()" >Confirm</el-button>
         </div>
     </div>
 </div>
 </template>
 
 <script>
+
+
 export default{
     data(){
         return{
@@ -93,14 +140,16 @@ export default{
             orderId:"",
             orderAlgo:"",
             res:"",
-            detail:""
+            detail:"",
+            orderData:[],
+            isCancel:false
         }
     },
     methods:{
         getMarketResult(){
             this.$axios.get("http://localhost:8080/order/result/market?orderId="+this.orderId)
             .then(response => {
-                console.log(response)
+                // console.log(response)
                 // this.tableData = response.data.data
                 this.res = response.data.data.res
                 this.detail = response.data.data.detail
@@ -110,13 +159,28 @@ export default{
         getLimitResult(){
             this.$axios.get("http://localhost:8080/order/result/limit?orderId="+this.orderId)
             .then(response => {
-                console.log(response)
-                // this.tableData = response.data.data
+                console.log(response)    
                 this.res = response.data.data.res
                 this.detail = response.data.data.detail
                 this.tableData = response.data.data.list
+                console.log(this.tableData)
             })
+        },
+        getCancelResult(){
+            this.$axios.get("http://localhost:8080/order/result/cancel?orderId="+this.orderId)
+            .then(response => {
+                
+                // console.log(response)
+                this.res = response.data.data.res
+                this.detail = response.data.data.detail
+                this.orderData = response.data.data.orderList
+
+            })
+        },
+        goBack(){
+            this.$router.push('/trader/create/')
         }
+        
     },
     mounted(){
         this.orderAlgo = this.$route.query.orderType
@@ -126,7 +190,8 @@ export default{
         }else if(this.orderAlgo==1){
             this.getLimitResult()
         }else if(this.orderAlgo==3){
-            console.log(this.orderId)
+            this.isCancel = true;
+            this.getCancelResult()
         }
         
     }

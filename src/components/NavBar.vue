@@ -27,13 +27,13 @@
         return {
             pageIndex: 0,
             menuItems: [
-                // {
-                //   isActive: true,
-                //   name: 'DashBoard',
-                //   icon: require('@/assets/dashboard.png'),
-                //   iconActive: require('@/assets/dashboard-white.png'),
-                //   route: '/dashboard',
-                // },
+                {
+                  isActive: true,
+                  name: 'DashBoard',
+                  icon: require('@/assets/dashboard.png'),
+                  iconActive: require('@/assets/dashboard-white.png'),
+                  route: '/dashboard',
+                },
                 {
                   isActive: false,
                   name: 'Market Depth',
@@ -70,7 +70,7 @@
     methods: {
         navigate(route,idx) {
             this.pageIndex = idx;
-            this.$router.push('/trader'+route);
+            this.$router.push('/trader'+route , ()=>{}, ()=>{});
         },
         logout() {
             this.$router.push('/');

@@ -128,6 +128,7 @@
       },
       updateMarket(product_id){
         this.product_id = product_id
+        this.currentLevel = 1
         this.getMarketDepth()
         this.getMarketNum()
       }

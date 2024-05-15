@@ -6,36 +6,53 @@
         <div class="content">
             <el-table
                 :data="tableData"
-                style="margin: auto; width: 96%; margin-top: 10px;">
+                style="margin: auto; width: 96%; margin-top: 10px;"
+                height="410">
                 <el-table-column
-                    prop="tradeId"
-                    label="TradeId"
+                    prop="orderId"
+                    label="Order Id"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="broker"
-                    label="Broker"
+                    prop="brokerId"
+                    label="Broker Id"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="product"
-                    label="Product"
+                    prop="productId"
+                    label="Product Id"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="period"
-                    label="Period"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="qty"
+                    prop="quantity"
                     label="Qty"
                     width="120">
                 </el-table-column>
-
+                <el-table-column
+                    prop="remainQuantity"
+                    label="Remain Qty"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="price"
+                    label="Price"
+                    width="120">
+                </el-table-column>
+                <el-table-column
+                    prop="createTime"
+                    label="Create Time"
+                    width="160">
+                </el-table-column>
+                <el-table-column
+                    prop="updateTime"
+                    label="Update Time"
+                    width="160">
+                </el-table-column>
+                
+<!-- 
                 <el-table-column label="Initiator">
                     <el-table-column
-                    prop="trader1"
+                    prop="traderId"
                     label="Trader"
                     width="130">
                     </el-table-column>
@@ -51,7 +68,7 @@
                     label="Side"
                     width="130">
                     </el-table-column>
-                </el-table-column>
+                </el-table-column> -->
 
                 
                 
@@ -73,22 +90,10 @@
   export default {
     data() {
         return {
-          tableData: [{
-            tradeId:"312345",
-            broker:"M",
-            product:"Gold",
-            period:"SEP 16",
-            price:"1246",
-            qty:"50",
-            trader1:"Sam Wang",
-            company1:"ABC Corp",
-            side1:"Sell",
-            trader2:"Anna Liu",
-            company2:"MS",
-            side2:"Buy"
-          }],
+          tableData: [],
           pageTotal:5,
-          currentPage:1
+          currentPage:1,
+          traderId:""
         }
     },
     methods: {
@@ -98,9 +103,21 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      handleCurrentChange(){
-
-      }
+      handleCurrentChange(page){
+        this.currentPage = page;
+        this.getLimitOrderList()
+      },
+      getLimitOrderList(){
+        this.$axios.get("http://localhost:8080/order/list?traderId="+this.traderId+"&pageNo="+this.currentPage+"&pageSize=5")
+        .then(response => {
+            this.tableData = response.data.data.data
+            this.pageTotal = response.data.data.totalPages
+        })
+      },
+    },
+    mounted(){
+        this.traderId = window.localStorage.getItem("traderId")
+        this.getLimitOrderList()
     }
   }
 </script>

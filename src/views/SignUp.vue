@@ -4,30 +4,46 @@
             <div class="title">Welcome to Trading Center</div>
             <div class="subtitle">Login to Your Account</div>
             <div class="input-title">Email</div>
-            <input type="text" placeholder="please enter your email">
+            <input type="text" placeholder="please enter your email" v-model="mail">
             <div class="input-title">Name</div>
-            <input type="text" placeholder="please enter your name">
+            <input type="text" placeholder="please enter your name" v-model="name">
             <div class="input-title">Company</div>
-            <input type="text" placeholder="please enter your company">
+            <input type="text" placeholder="please enter your company" v-model="company">
             <div class="input-title">Password</div>
             <input type="password" v-model="password" placeholder="please enter your password">
-            <button class="btn">SignUp</button>
+            <button class="btn" @click="signup">SignUp</button>
             <div class="register-link">Already have an account? <router-link to="/">Login to Account</router-link></div>
         </div>
     </div>
 </template>
 
 <script>
+
+
 export default{
     data() {
         return {
+            name:"",
+            mail:"",
+            company:"",
             password:""
         }
     },
     methods: {
         signup() {
-            
-          
+            const userInfo={
+                name:this.name,
+                mail : this.mail,
+                company: this.company,
+                password: this.password
+            }
+            this.$axios.post("http://localhost:8080/trader/register",userInfo)
+            .then(response =>{
+                console.log(response)
+                if(response.data.code==200){
+                    this.$router.push("/")
+                }
+            })
         }
     }
 }

@@ -6,48 +6,49 @@
         <div class="content">
             <el-table
                 :data="tableData"
-                style="margin: auto; width: 96%; margin-top: 10px;">
+                style="margin: auto; width: 96%; margin-top: 10px;"
+                height="450">
                 <el-table-column
-                    prop="tradeId"
-                    label="TradeId"
+                    prop="orderId"
+                    label="Order Id"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="broker"
+                    prop="brokerName"
                     label="Broker"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="product"
+                    prop="productName"
                     label="Product"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="period"
+                    prop="createTime"
                     label="Period"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="qty"
+                    prop="quantity"
                     label="Qty"
                     width="120">
                 </el-table-column>
 
                 <el-table-column label="Initiator">
                     <el-table-column
-                    prop="trader1"
+                    prop="traderName"
                     label="Trader"
                     width="130">
                     </el-table-column>
 
                     <el-table-column
-                    prop="company1"
+                    prop="traderCompany"
                     label="Company"
                     width="130">
                     </el-table-column>
 
                     <el-table-column
-                    prop="side1"
+                    prop="orderSide"
                     label="Side"
                     width="130">
                     </el-table-column>
@@ -73,22 +74,10 @@
   export default {
     data() {
         return {
-          tableData: [{
-            tradeId:"312345",
-            broker:"M",
-            product:"Gold",
-            period:"SEP 16",
-            price:"1246",
-            qty:"50",
-            trader1:"Sam Wang",
-            company1:"ABC Corp",
-            side1:"Sell",
-            trader2:"Anna Liu",
-            company2:"MS",
-            side2:"Buy"
-          }],
+          tableData: [],
           pageTotal:5,
-          currentPage:1
+          currentPage:1,
+          brokerId:""
         }
     },
     methods: {
@@ -98,9 +87,22 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      handleCurrentChange(){
-
+      handleCurrentChange(page){
+        this.currentPage = page
+        this.getPendingOrders()
+      },
+      getPendingOrders(){
+        this.$axios.get("http://localhost:8080/order/list/limit?brokerId="+this.brokerId+"&pageNo="+this.currentPage+"&pageSize=4")
+        .then(response => {
+            // console.log(response)
+            this.pageTotal = response.data.data.totalPages
+            this.tableData = response.data.data.data
+        })
       }
+    },
+    mounted(){
+        this.brokerId = window.localStorage.getItem("brokerId");
+        this.getPendingOrders()
     }
   }
 </script>

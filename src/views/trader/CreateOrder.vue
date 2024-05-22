@@ -38,6 +38,8 @@
           this.active = 1
         }else if(to.name=='step3'){
           this.active = 2
+        }else{
+          this.active = 0
         }
         next()
         

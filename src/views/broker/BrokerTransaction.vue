@@ -1,47 +1,51 @@
 <template>
     <div class="content-container">
         <div class="head-box">
-            <h2>Transaction</h2>
+            <h2>Transaction Center</h2>
         </div>
         <div class="content">
             <el-table
                 :data="tableData"
+                height="500"
                 style="margin: auto; width: 96%; margin-top: 10px;">
+
                 <el-table-column
-                    prop="tradeId"
-                    label="TradeId"
+                    prop="transactionId"
+                    label="transaction Id"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="broker"
+                    prop="brokerName"
                     label="Broker"
                     width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="product"
+                    prop="productName"
                     label="Product"
-                    width="100">
+                    width="100"
+                    :filters="productFilters"
+                    :filter-method="filterProduct">
                 </el-table-column>
                 <el-table-column
-                    prop="period"
+                    prop="createTime"
                     label="Period"
                     width="100">
                 </el-table-column>
                 <el-table-column
-                    prop="qty"
+                    prop="quantity"
                     label="Qty"
                     width="100">
                 </el-table-column>
 
                 <el-table-column label="Initiator">
                     <el-table-column
-                    prop="trader1"
+                    prop="trader1Name"
                     label="Trader"
                     width="100">
                     </el-table-column>
 
                     <el-table-column
-                    prop="company1"
+                    prop="trader1Company"
                     label="Company"
                     width="100">
                     </el-table-column>
@@ -55,13 +59,13 @@
 
                 <el-table-column label="Completion">
                     <el-table-column
-                    prop="trader2"
+                    prop="trader2Name"
                     label="Trader"
                     width="100">
                     </el-table-column>
 
                     <el-table-column
-                    prop="company2"
+                    prop="trader2Company"
                     label="Company"
                     width="100">
                     </el-table-column>
@@ -91,22 +95,11 @@
   export default {
     data() {
         return {
-          tableData: [{
-            tradeId:"312345",
-            broker:"M",
-            product:"Gold",
-            period:"SEP 16",
-            price:"1246",
-            qty:"50",
-            trader1:"Sam Wang",
-            company1:"ABC Corp",
-            side1:"Sell",
-            trader2:"Anna Liu",
-            company2:"MS",
-            side2:"Buy"
-          }],
+          tableData: [],
           pageTotal:5,
-          currentPage:1
+          currentPage:1,
+          productFilters: [], // 过滤器选项
+          filteredProducts: [], // 过滤后的产品列表
         }
     },
     methods: {
@@ -116,9 +109,35 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      handleCurrentChange(){
-
-      }
+      handleCurrentChange(currentPage){
+       this.getTransactions(currentPage,5)
+      },
+      getTransactions(pageNo,pagesize){
+        this.$axios.get("http://localhost:8080/transaction/get?pageNo="+pageNo+"&pageSize="+pagesize)
+        .then(response => {
+            console.log(response.data.data)
+            this.tableData = response.data.data.data
+            this.pageTotal = response.data.data.totalPages,
+            this.getProductFilters();
+        })
+      },
+      filterProduct(value, row) {
+        return row.productName.toLowerCase().includes(value.toLowerCase());
+        },
+        getProductFilters() {
+        const products = this.tableData.map(item => item.productName);
+        const uniqueProducts = [...new Set(products)];
+        this.productFilters = uniqueProducts.map(product => {
+            return {
+            text: product,
+            value: product
+            };
+        });
+        }
+    },
+    mounted(){
+        this.getTransactions(0,5);
+        
     }
   }
 </script>

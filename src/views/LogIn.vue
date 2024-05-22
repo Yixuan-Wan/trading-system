@@ -32,8 +32,21 @@ export default{
             .then(response => {
                 console.log(response)
                 if(response.data.code==200){
-                    window.localStorage.setItem("traderId",response.data.data);
-                    this.$router.push('trader')
+                    window.localStorage.setItem("userName",response.data.data.userName);
+                    window.localStorage.setItem("mail",response.data.data.mail);
+                    window.localStorage.setItem("company",response.data.data.company);
+
+                    if(response.data.data.userType=="0"){
+                        window.localStorage.setItem("traderId",response.data.data.userId);
+                        this.$router.push('trader')
+                    }else{
+                        window.localStorage.setItem("brokerId",response.data.data.userId);
+                        this.$router.push('broker')
+                    }
+                    
+                    
+                   
+                   
                 }else{
                     this.$message.error('Username or password is incorrect');
                 }

@@ -14,6 +14,9 @@ import BrokerHomePage from '@/views/broker/BrokerHomePage.vue'
 import PendingOrder from '@/views/broker/PendingOrder.vue'
 import BrokerTransaction from '@/views/broker/BrokerTransaction.vue'
 import MyOrder from '@/views/trader/MyOrder.vue'
+import MyOrderLimit from '@/views/trader/MyOrderLimit.vue'
+import MyOrderMarket from '@/views/trader/MyOrderMarket.vue'
+import MyOrderStop from '@/views/trader/MyOrderStop.vue'
 
 Vue.use(VueRouter)
 
@@ -76,6 +79,21 @@ const routes = [
         path:"order",
         name:"order-trader",
         component: MyOrder
+      },
+      {
+        path:"order-limit",
+        name:"order-limit-trader",
+        component: MyOrderLimit
+      },
+      {
+        path:"order-market",
+        name:"order-market-trader",
+        component: MyOrderMarket
+      },
+      {
+        path:"order-stop",
+        name:"order-stop-trader",
+        component: MyOrderStop
       }
     ]
   },{

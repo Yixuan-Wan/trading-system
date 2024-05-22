@@ -91,6 +91,8 @@ export default {
         this.CreateLimitOrder()
       }else if(this.orderAlgo==3){
         this.CreateCancelOrder()
+      }else if(this.orderAlgo==2){
+        this.CreateStopOrder()
       }
     },
     resetForm() {
@@ -165,6 +167,10 @@ export default {
         this.$message.error('Please fill in all required fields!');
         return; 
       }
+      if(!this.form.confirmation){
+        this.$message.error('Please confirm the order!');
+        return; 
+      }
       const limitOrder = {
         orderType: this.form.type,
         productId: this.form.product,
@@ -207,6 +213,34 @@ export default {
         }
       })
     },
+    CreateStopOrder(){
+      if (!this.form.type || !this.form.product || !this.form.broker || !this.form.quantity ||!this.form.price) {
+        this.$message.error('Please fill in all required fields!');
+        return; 
+      }
+      if(!this.form.confirmation){
+        this.$message.error('Please confirm the order!');
+        return; 
+      }
+      const stopOrder = {
+        orderType: this.form.type,
+        productId: this.form.product,
+        brokerId: this.form.broker,
+        stopPrice: this.form.price,
+        quantity: this.form.quantity,
+        remainQuantity: this.form.quantity,
+        traderId: this.traderId,
+        isFinished:0
+      }
+      this.$axios.post("http://localhost:8080/order/add/stop",stopOrder)
+      .then(response =>{
+        
+        if(response.data.code == 200){
+          this.orderId = response.data.data.orderId;
+          this.$router.push('step3?orderType='+this.orderAlgo+"&orderId="+this.orderId);
+        }
+      })
+    }
   },
   mounted(){
     this.getBorkerList()

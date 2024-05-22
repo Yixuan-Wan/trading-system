@@ -1,155 +1,126 @@
 <template>
-    <div class="content-container">
-        <div class="head-box">
-            <h2>My Orders</h2>
+    <div class="type-container">
+    <div class="type-box">
+        <div class="type" :class="{ 'selected': selectedType === 0 }" @click="selectType(0)">
+            <div class="order-type">Market Order</div>
+            <div class="order-detail">
+                - Buy or sell a security at the current market price
+                <br>
+                - Buy executed immediately at the lowest ask price
+                <br>
+                - Guarantee an immediate fill, not guarantee price
+            </div>
         </div>
-        <div class="content">
-            <el-table
-                :data="tableData"
-                style="margin: auto; width: 96%; margin-top: 10px;"
-                height="410">
-                <el-table-column
-                    prop="orderId"
-                    label="Order Id"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="brokerId"
-                    label="Broker Id"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="productId"
-                    label="Product Id"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="quantity"
-                    label="Qty"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="remainQuantity"
-                    label="Remain Qty"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="price"
-                    label="Price"
-                    width="120">
-                </el-table-column>
-                <el-table-column
-                    prop="createTime"
-                    label="Create Time"
-                    width="160">
-                </el-table-column>
-                <el-table-column
-                    prop="updateTime"
-                    label="Update Time"
-                    width="160">
-                </el-table-column>
-                
-<!-- 
-                <el-table-column label="Initiator">
-                    <el-table-column
-                    prop="traderId"
-                    label="Trader"
-                    width="130">
-                    </el-table-column>
+        <div class="type" :class="{ 'selected': selectedType === 1 }" @click="selectType(1)">
+            <div class="order-type">Limit Order</div>
+            <div class="order-detail">
+                - Buy or sell an instrument at price better than the market ask or bid price
+                <br>
+                - Guarantee a price, not guarantee execution
+            </div>
+        </div>
+        <div class="type" :class="{ 'selected': selectedType === 2 }" @click="selectType(2)">
+            <div class="order-type">Stop Order</div>
+            <div class="order-detail">
+                -- Buy or sell an instrument once the price of that instrument reaches a specified price
+                <br>
+                -- Limit loss if price is moving in opposite direction
+            </div>
+        </div>
 
-                    <el-table-column
-                    prop="company1"
-                    label="Company"
-                    width="130">
-                    </el-table-column>
-
-                    <el-table-column
-                    prop="side1"
-                    label="Side"
-                    width="130">
-                    </el-table-column>
-                </el-table-column> -->
-
-                
-                
-            </el-table>
-
-            <div class="pagination">
-                <el-pagination
-                :current-page="currentPage"
-                layout="prev, pager, next" 
-                :page-count="pageTotal"
-                @current-change="handleCurrentChange"
-                />
+        <div class="type-disabled">
+            <div class="order-type">To Be Continued</div>
+            <div class="order-detail">
+                -- More Strategy is developing...
             </div>
         </div>
     </div>
+
+    
+    </div>
+    
 </template>
 
 <script>
-  export default {
-    data() {
-        return {
-          tableData: [],
-          pageTotal:5,
-          currentPage:1,
-          traderId:""
+export default{
+    data(){
+        return{
+            selectedType:-1,
         }
     },
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleCurrentChange(page){
-        this.currentPage = page;
-        this.getLimitOrderList()
-      },
-      getLimitOrderList(){
-        this.$axios.get("http://localhost:8080/order/list?traderId="+this.traderId+"&pageNo="+this.currentPage+"&pageSize=5")
-        .then(response => {
-            this.tableData = response.data.data.data
-            this.pageTotal = response.data.data.totalPages
-        })
-      },
-    },
-    mounted(){
-        this.traderId = window.localStorage.getItem("traderId")
-        this.getLimitOrderList()
+    methods:{
+        selectType(index){
+            // this.selectedType = index
+            if(index==0){
+                this.$router.push("/trader/order-market")
+            }else if(index==1){
+                this.$router.push("/trader/order-limit")
+            }else if(index==2){
+                this.$router.push("/trader/order-stop")
+            }
+        },
+        
     }
-  }
+}
+
 </script>
 
+
 <style scoped>
-.content-container{
-    background-color: #F5F6FA;
+.type-container{
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    background-color: #f5f6fa;
 }
-.head-box{
-    width: 90%;
-    text-align: start;
-    margin-bottom: 10px;
-    margin-top: 25px;
-}
-
-.content{
-    width: 90%;
+.type-box{
+    width: 80%;
     height: 80%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+.type{
+    width:35%;
+    height: 40%;
     background-color: white;
-    padding: 10px;
     border-radius: 10px;
-}
-.pagination{
-    margin-top: 2%;
-    text-align: right;
+    padding: 10px 20px;
+    text-align: start;
+    line-height: 32px;
 }
 
+.order-type{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.selected {
+border: 1px solid #4880FF;
+box-shadow: 0 0 10px #4880FF;
+}
+
+.button-container{
+  width: 90%;
+  /* background-color: antiquewhite; */
+  margin: auto;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+.type-disabled{
+    background-color: #e9e9e9;
+    width:35%;
+    height: 40%;
+    /* background-color: white; */
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-align: start;
+    line-height: 32px;
+}
 </style>
-
-

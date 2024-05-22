@@ -159,11 +159,11 @@ export default{
         getLimitResult(){
             this.$axios.get("http://localhost:8080/order/result/limit?orderId="+this.orderId)
             .then(response => {
-                console.log(response)    
+                // console.log(response)    
                 this.res = response.data.data.res
                 this.detail = response.data.data.detail
                 this.tableData = response.data.data.list
-                console.log(this.tableData)
+                // console.log(this.tableData)
             })
         },
         getCancelResult(){
@@ -179,7 +179,17 @@ export default{
         },
         goBack(){
             this.$router.push('/trader/create/')
-        }
+        },
+        getStopResult(){
+            this.$axios.get("http://localhost:8080/order/result/stop?orderId="+this.orderId)
+            .then(response => {
+                // console.log(response)    
+                this.res = response.data.data.res
+                this.detail = response.data.data.detail
+                this.tableData = response.data.data.list
+                // console.log(this.tableData)
+            })
+        },
         
     },
     mounted(){
@@ -192,6 +202,8 @@ export default{
         }else if(this.orderAlgo==3){
             this.isCancel = true;
             this.getCancelResult()
+        }else if(this.orderAlgo==2){
+            this.getStopResult()
         }
         
     }

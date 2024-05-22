@@ -28,12 +28,10 @@
             </div>
         </div>
 
-        <div class="type" :class="{ 'selected': selectedType === 3 }" @click="selectType(3)">
-            <div class="order-type">Cancel Order</div>
+        <div class="type-disabled">
+            <div class="order-type">To Be Continued</div>
             <div class="order-detail">
-                -- Cancel an existing order 
-                <br>
-                -- Can be only partly canceled
+                -- More Strategy is developing...
             </div>
         </div>
     </div>
@@ -84,6 +82,16 @@ export default{
     justify-content: space-around;
     align-items: center;
 
+}
+.type-disabled{
+    background-color: #e9e9e9;
+    width:35%;
+    height: 40%;
+    /* background-color: white; */
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-align: start;
+    line-height: 32px;
 }
 
 .type{

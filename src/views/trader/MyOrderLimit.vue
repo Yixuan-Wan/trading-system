@@ -18,13 +18,13 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="brokerId"
-                    label="Broker Id"
+                    prop="brokerName"
+                    label="Broker"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="productId"
-                    label="Product Id"
+                    prop="productName"
+                    label="Product"
                     width="120">
                 </el-table-column>
                 <el-table-column
@@ -43,8 +43,8 @@
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="createTime"
-                    label="Create Time"
+                    prop="orderSide"
+                    label="Side"
                     width="160">
                 </el-table-column>
                 <el-table-column
@@ -116,6 +116,7 @@
       getLimitOrderList(){
         this.$axios.get("http://localhost:8080/order/list/limit?traderId="+this.traderId+"&pageNo="+this.currentPage+"&pageSize=5")
         .then(response => {
+            console.log(response);
             this.tableData = response.data.data.data
             this.pageTotal = response.data.data.totalPages
         })
@@ -167,7 +168,7 @@
     },
     },
     mounted(){
-        this.traderId = window.localStorage.getItem("traderId")
+        this.traderId = window.sessionStorage.getItem("traderId")
         this.getLimitOrderList()
     }
   }

@@ -101,7 +101,7 @@
       }
     },
     mounted(){
-        this.brokerId = window.localStorage.getItem("brokerId");
+        this.brokerId = window.sessionStorage.getItem("brokerId");
         this.getPendingOrders()
     }
   }

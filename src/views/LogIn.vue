@@ -32,15 +32,15 @@ export default{
             .then(response => {
                 console.log(response)
                 if(response.data.code==200){
-                    window.localStorage.setItem("userName",response.data.data.userName);
-                    window.localStorage.setItem("mail",response.data.data.mail);
-                    window.localStorage.setItem("company",response.data.data.company);
+                    window.sessionStorage.setItem("userName",response.data.data.userName);
+                    window.sessionStorage.setItem("mail",response.data.data.mail);
+                    window.sessionStorage.setItem("company",response.data.data.company);
 
                     if(response.data.data.userType=="0"){
-                        window.localStorage.setItem("traderId",response.data.data.userId);
+                        window.sessionStorage.setItem("traderId",response.data.data.userId);
                         this.$router.push('trader')
                     }else{
-                        window.localStorage.setItem("brokerId",response.data.data.userId);
+                        window.sessionStorage.setItem("brokerId",response.data.data.userId);
                         this.$router.push('broker')
                     }
                     

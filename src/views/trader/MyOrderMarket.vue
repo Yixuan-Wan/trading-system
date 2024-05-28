@@ -13,17 +13,17 @@
                 height="410">
                 <el-table-column
                     prop="orderId"
-                    label="Order Id"
+                    label="Order"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="brokerId"
+                    prop="brokerName"
                     label="Broker Id"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="productId"
-                    label="Product Id"
+                    prop="productName"
+                    label="Product"
                     width="120">
                 </el-table-column>
                 <el-table-column
@@ -157,7 +157,7 @@
     },
     },
     mounted(){
-        this.traderId = window.localStorage.getItem("traderId")
+        this.traderId = window.sessionStorage.getItem("traderId")
         this.getLimitOrderList()
     }
   }

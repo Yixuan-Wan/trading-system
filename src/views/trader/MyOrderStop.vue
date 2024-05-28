@@ -17,13 +17,13 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="brokerId"
-                    label="Broker Id"
+                    prop="brokerName"
+                    label="Broker"
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="productId"
-                    label="Product Id"
+                    prop="productName"
+                    label="Product"
                     width="120">
                 </el-table-column>
                 <el-table-column
@@ -162,7 +162,7 @@
     },
     },
     mounted(){
-        this.traderId = window.localStorage.getItem("traderId")
+        this.traderId = window.sessionStorage.getItem("traderId")
         this.getStopOrderList()
     }
   }

@@ -18,10 +18,7 @@
 <script>
 export default{
     name:'TopBar',
-    props:{
-        userName: String,
-        userLevel: String
-    },
+    
     data() {
         return {
             type:'Morgan Stanley',
@@ -29,8 +26,9 @@ export default{
         }
     },
     mounted(){
-    //   const type = sessionStorage.getItem('type');
-    //   const name = sessionStorage.getItem('username');
+
+        this.name = window.sessionStorage.getItem("userName");
+        this.type = window.sessionStorage.getItem("company")
       
     }
 }

@@ -45,7 +45,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm">Submit</el-button>
-                <el-button @click="resetForm">Reset</el-button>
+                <!-- <el-button @click="resetForm">Reset</el-button> -->
             </el-form-item>
             </el-form>
         </div>
@@ -143,6 +143,14 @@ export default {
         this.$message.error('Please confirm the order!');
         return; 
       }
+      if(this.form.quantity > 2147483647){
+        this.$message.error('The quantity exceeds the maximum(2147483647)');
+        return;
+      }
+      if(this.form.quantity <= 0){
+        this.$message.error('The quantity must be greater than 0');
+        return;
+      }
       
       const marketOrder = {
         orderType: this.form.type,
@@ -156,6 +164,9 @@ export default {
       this.$axios.post("http://localhost:8080/order/add/market",marketOrder)
       .then(response =>{
         // console.log(response);
+        if(response.data.code == -2){
+          this.openAlert(response.data.message)
+        }
         if(response.data.code == 200){
           this.orderId = response.data.data.orderId;
           this.$router.push('step3?orderType='+this.orderAlgo+"&orderId="+this.orderId);
@@ -171,6 +182,27 @@ export default {
         this.$message.error('Please confirm the order!');
         return; 
       }
+      if(this.form.quantity > 2147483647){
+        this.$message.error('The quantity exceeds the maximum(2147483647)');
+        return;
+      }
+      if(this.form.quantity <= 0){
+        this.$message.error('The quantity must be greater than 0');
+        return;
+      }
+      if(this.form.price > 2147483647){
+        this.$message.error('The price exceeds the maximum(2147483647)');
+        return;
+      }
+      if(this.form.price <= 0){
+        this.$message.error('The price must be greater than 0');
+        return;
+      }
+      if(!Number.isInteger(this.form.price)){
+        this.$message.error("The price must be an Integer")
+        return;
+      }
+
       const limitOrder = {
         orderType: this.form.type,
         productId: this.form.product,
@@ -184,6 +216,9 @@ export default {
       this.$axios.post("http://localhost:8080/order/add/limit",limitOrder)
       .then(response =>{
         // console.log(response);
+        if(response.data.code==-2){
+          this.openAlert(response.data.message)
+        }
         if(response.data.code == 200){
           this.orderId = response.data.data.orderId;
           this.$router.push('step3?orderType='+this.orderAlgo+"&orderId="+this.orderId);
@@ -198,6 +233,10 @@ export default {
       if(!this.form.confirmation){
         this.$message.error('Please confirm the order!');
         return; 
+      }
+      if(this.form.quantity > 2147483647){
+        this.$message.error('The quantity exceeds the maximum(2147483647)');
+        return;
       }
       const cancelOrder = {
         deleteOrderId: this.deleteOrderId,
@@ -222,6 +261,26 @@ export default {
         this.$message.error('Please confirm the order!');
         return; 
       }
+      if(this.form.quantity > 2147483647){
+        this.$message.error('The quantity exceeds the maximum(2147483647)');
+        return;
+      }
+      if(this.form.price > 2147483647){
+        this.$message.error('The price exceeds the maximum(2147483647)');
+        return;
+      }
+      if(this.form.quantity <= 0){
+        this.$message.error('The quantity must be greater than 0');
+        return;
+      }
+      if(this.form.price <= 0){
+        this.$message.error('The price must be greater than 0');
+        return;
+      }
+      if(!Number.isInteger(this.form.price)){
+        this.$message.error("The price must be an Integer")
+        return;
+      }
       const stopOrder = {
         orderType: this.form.type,
         productId: this.form.product,
@@ -240,13 +299,22 @@ export default {
           this.$router.push('step3?orderType='+this.orderAlgo+"&orderId="+this.orderId);
         }
       })
+    },
+    openAlert(msg){
+      this.$alert(msg, 'ERROR: Conflict with this existing order', {
+          confirmButtonText: 'Confirm',
+          dangerouslyUseHTMLString: true,
+          callback: action => {
+            console.log(action)
+          }
+        });
     }
   },
   mounted(){
     this.getBorkerList()
     this.getProductList()
     this.getOrderName()
-    this.traderId = window.localStorage.getItem("traderId")
+    this.traderId = window.sessionStorage.getItem("traderId")
   }
 };
 </script>

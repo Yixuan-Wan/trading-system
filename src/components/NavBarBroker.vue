@@ -76,7 +76,14 @@
     },
     mounted(){
       const path = this.$route.path
-      console.log(path)   
+      console.log(path) 
+      if(path.startsWith("/broker/market")){
+        this.pageIndex = 0;
+      }else if(path.startsWith("/broker/pending-order")){
+        this.pageIndex = 1;
+      }else if(path.startsWith("/broker/transaction")){
+        this.pageIndex = 2;
+      }  
     }
 
   };
